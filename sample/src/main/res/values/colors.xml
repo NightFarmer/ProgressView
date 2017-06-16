@@ -6,4 +6,10 @@
 
     <color name="downloadButton">#ff8340</color>
 
+    <color name="downloadButton2">#48ab43</color>
+    <color name="downloadButton3">#4963c2</color>
+    <color name="downloadButton4">#ff4242</color>
+    <color name="downloadButton5">#a03db6</color>
+    <color name="downloadButton6">#3babab</color>
+
 </resources>
