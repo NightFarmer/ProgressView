@@ -3,7 +3,8 @@
 ProgressView是一个可以定制的镂空加载button，支持设置边框宽度，按钮颜色。
 
 ## 示例  
-暂时无图
+![screenshot](https://raw.githubusercontent.com/NightFarmer/ProgressView/master/sample/screenshot/screenshot.gif)
+
 
 ## 使用方法
 ### 添加依赖
