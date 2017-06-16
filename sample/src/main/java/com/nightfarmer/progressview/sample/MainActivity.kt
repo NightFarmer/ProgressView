@@ -57,9 +57,11 @@ class MainActivity : AppCompatActivity() {
                 if (progress > 1) {
                     break
                 }
-                progress += Math.random().toFloat() * 0.1f
-                runOnUiThread {
-                    onProgress?.invoke(Math.min(progress, 1f))
+                if (state != ProgressView.ProgressState.Paused) {
+                    progress += Math.random().toFloat() * 0.1f
+                    runOnUiThread {
+                        onProgress?.invoke(Math.min(progress, 1f))
+                    }
                 }
                 Thread.sleep(100)
             }
