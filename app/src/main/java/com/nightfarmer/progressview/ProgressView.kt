@@ -21,21 +21,21 @@ class ProgressView @JvmOverloads constructor(context: Context, attrs: AttributeS
     var borderWidth = 1f
         set(value) {
             field = value
-            paint_border.strokeWidth = value
+            paintBorder.strokeWidth = value
             invalidate()
         }
 
     var color = Color.RED
         set(value) {
             field = value
-            paint_border.color = value
-            paint_bg.color = value
-            paint_front.color = value
-            paint_txt.color = value
+            paintBorder.color = value
+            paintBg.color = value
+            paintFront.color = value
+            paintTxt.color = value
             invalidate()
         }
 
-    var progress = 0.3f
+    var progress = 0f
         set(value) {
             field = value
             invalidate()
@@ -50,7 +50,7 @@ class ProgressView @JvmOverloads constructor(context: Context, attrs: AttributeS
     var textSize = DefaultFontSize
         set(value) {
             field = value
-            paint_txt.textSize = value
+            paintTxt.textSize = value
             invalidate()
         }
 
@@ -73,36 +73,38 @@ class ProgressView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     val rectF = RectF(0f, 0f, 0f, 0f)
     val maskRectF = RectF(0f, 0f, 0f, 0f)
-    val txt_rect = Rect()
+    val txtRect = Rect()
 
-    val paint_border = Paint()
-    var paint_bg = Paint()
-    var paint_front = Paint()
-    var paint_txt = Paint()
+    val paintBorder = Paint()
+    var paintBg = Paint()
+    var paintFront = Paint()
+    var paintTxt = Paint()
 
+    private var viewWidth = 0
+    private var viewHeight = 0
 
     companion object {
         private val DefaultFontSize = 30f
     }
 
     init {
-        paint_bg.color = color
-        paint_bg.isAntiAlias = true
+        paintBg.color = color
+        paintBg.isAntiAlias = true
 
-        paint_front.color = color
-        paint_front.isAntiAlias = true
-        paint_front.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        paintFront.color = color
+        paintFront.isAntiAlias = true
+        paintFront.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
 
-        paint_border.color = color
-        paint_border.isAntiAlias = true
-        paint_border.strokeWidth = borderWidth
-        paint_border.style = Paint.Style.STROKE
+        paintBorder.color = color
+        paintBorder.isAntiAlias = true
+        paintBorder.strokeWidth = borderWidth
+        paintBorder.style = Paint.Style.STROKE
 
-        paint_txt.color = color
-        paint_txt.textSize = textSize
-        paint_txt.isAntiAlias = true
-        paint_txt.xfermode = PorterDuffXfermode(PorterDuff.Mode.XOR)
-        paint_txt.textAlign = Paint.Align.LEFT
+        paintTxt.color = color
+        paintTxt.textSize = textSize
+        paintTxt.isAntiAlias = true
+        paintTxt.xfermode = PorterDuffXfermode(PorterDuff.Mode.XOR)
+        paintTxt.textAlign = Paint.Align.LEFT
 
         setOnClickListener {
             when (state) {
@@ -128,18 +130,18 @@ class ProgressView @JvmOverloads constructor(context: Context, attrs: AttributeS
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        val layerId = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null, Canvas.ALL_SAVE_FLAG)
-        canvas.drawRoundRect(rectF, radius, radius, paint_bg)
+        val layerId = canvas.saveLayer(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat(), null, Canvas.ALL_SAVE_FLAG)
+        canvas.drawRoundRect(rectF, radius, radius, paintBg)
 
         maskRectF.left = rectF.left + progress * (rectF.right - rectF.left)
-        canvas.drawRect(maskRectF, paint_front)
-        canvas.drawRoundRect(rectF, radius, radius, paint_border)
+        canvas.drawRect(maskRectF, paintFront)
+        canvas.drawRoundRect(rectF, radius, radius, paintBorder)
 
         val text = parseText()
-        paint_txt.getTextBounds(text, 0, text.length, txt_rect)
-        val textX = (width / 2) - txt_rect.centerX()
-        val textY = (height / 2) - txt_rect.centerY()
-        canvas.drawText(text, textX.toFloat(), textY.toFloat(), paint_txt)
+        paintTxt.getTextBounds(text, 0, text.length, txtRect)
+        val textX = (viewWidth / 2) - txtRect.centerX()
+        val textY = (viewHeight / 2) - txtRect.centerY()
+        canvas.drawText(text, textX.toFloat(), textY.toFloat(), paintTxt)
 
         canvas.restoreToCount(layerId)
     }
@@ -154,14 +156,18 @@ class ProgressView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        viewWidth = measuredWidth
+        viewHeight = measuredHeight
+
         rectF.left = borderWidth / 2
         rectF.top = borderWidth / 2
-        rectF.right = width - borderWidth / 2
-        rectF.bottom = height - borderWidth / 2
+        rectF.right = viewWidth - borderWidth / 2
+        rectF.bottom = viewHeight - borderWidth / 2
 
         maskRectF.left = rectF.left
         maskRectF.top = rectF.top
         maskRectF.right = rectF.right
         maskRectF.bottom = rectF.bottom
+
     }
 }
