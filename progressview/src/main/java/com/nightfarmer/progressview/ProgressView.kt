@@ -164,10 +164,10 @@ class ProgressView @JvmOverloads constructor(context: Context, attrs: AttributeS
         rectF.right = viewWidth - borderWidth / 2
         rectF.bottom = viewHeight - borderWidth / 2
 
-        maskRectF.left = rectF.left
-        maskRectF.top = rectF.top
-        maskRectF.right = rectF.right
-        maskRectF.bottom = rectF.bottom
+        maskRectF.left = 0f
+        maskRectF.top = 0f
+        maskRectF.right = viewWidth.toFloat()
+        maskRectF.bottom = viewHeight.toFloat()
 
     }
 }
